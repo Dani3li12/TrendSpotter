@@ -1,0 +1,109 @@
+
+@font-face {
+    font-family: 'HelveticaNeue5';
+    src: url('/static/fonts/HelveticaNeueLight.otf');
+    font-weight: light;
+    font-style: normal;
+}
+
+
+body {
+    font-family: 'HelveticaNeue5', cursive, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: white;
+    height: 100vh;
+    background-image: url("/static/assets/background.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+}
+
+
+
+        .form-container {
+            font-family: 'HelveticaNeue5', cursive, Arial, sans-serif;
+            padding: 40px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            margin-top: 100px;
+            margin-bottom: auto;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .logo-login {
+            display: block;
+            margin: 0 auto 20px;
+            max-width: 300px;
+            padding-bottom: 60px;
+        }
+
+        .btn-add {
+            margin-top: 10px;
+            margin-bottom: 20px;
+            color: white;
+            border-color: white;
+            border-radius: 999px !important;
+        }
+
+        .w-100 {
+        border-radius: 999px !important;
+        color: white;
+        background-color: black;
+        }
+
+
+.rounded-pill-input {
+    border-radius: 999px !important;
+    margin: 0 auto 20px;
+}
+
+.form-control{
+border-radius: 20px;
+}
+
+.w-100{
+background-color: black;
+    border: 0px solid white;
+}
+.btn-success:hover{
+background: #ff3799;
+}
+
+.form-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem; /* space between columns */
+  padding: 1rem;
+flex-direction: column;
+}
+
+.form_input{
+    border-radius: 5px;
+    border: 0px;
+    height: 30px;
+    padding-left: 10px;
+    margin-bottom: 13px;
+}
+.submit_button{
+    background: black;
+    color: white;
+    padding: 5px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+}
+
+.add_cource_btn{
+    background: white;
+    border: none;
+    border-radius: 15px;
+    padding: 5px;
+}
+
+.courses-container{
+    display: flex;
+    flex-direction: column;
+}

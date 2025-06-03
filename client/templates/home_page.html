@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your App - Homepage</title>
+    {{ bootstrap.load_css() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home-styles.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <img src="/static/assets/logo.png" alt="logo" class="logo-login">
+
+        <form method="GET" action="{{ url_for('process_inputs') }}">
+            <div class="mb-3">
+                <label for="field" class="form-label">What field are you currently studying?</label>
+                <input type="text" class="form-control rounded-pill-input" id="field" name="field" placeholder="e.g. Data Science" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">What courses are you studying?</label>
+                <div id="courses-container">
+                    <input type="text" name="course" class="form-control rounded-pill-input" placeholder="Enter course name" required >
+                </div>
+                <button type="button" class="btn btn-outline-primary btn-sm btn-add" onclick="addCourseInput()">+ Add another course</button>
+            </div>
+
+            <button type="submit" class="btn btn-success w-100">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        function addCourseInput() {
+            const container = document.getElementById("courses-container");
+            const input = document.createElement("input");
+            input.type = "text";
+            input.name = "course";
+            input.placeholder = "Enter course name";
+            input.classList.add("form-control", "mb-2");
+            container.appendChild(input);
+        }
+    </script>
+
+    {{ bootstrap.load_js() }}
+</body>
+</html>

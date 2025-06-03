@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your App - Homepage</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='home-styles.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <img src="/static/assets/logo.png" alt="logo" class="logo-login">
+
+        <form method="GET" action="{{ url_for('process_inputs') }}" class="form-flex">
+
+                <label for="field">What field are you currently studying?</label>
+                <input type="text" id="field" name="field" placeholder="e.g. Data Science" required class="form_input">
+
+                <label>What courses are you studying?</label><br/>
+                <div id="courses-container" class="courses-container">
+                    <input class="form_input" type="text" name="course" placeholder="Enter course name" required >
+                </div>
+                <button type="button" onclick="addCourseInput()" class="add_cource_btn">+ Add another course</button>
+
+            <button type="submit" class="submit_button">Submit</button>
+        </form>
+    </div>
+
+    <script>
+        function addCourseInput() {
+            const container = document.getElementById("courses-container");
+            const input = document.createElement("input");
+            input.type = "text";
+            input.name = "course";
+            input.className="form_input"
+            input.placeholder = "Enter course name";
+            container.appendChild(input);
+        }
+    </script>
+</body>
+</html>

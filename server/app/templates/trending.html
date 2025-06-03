@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trending Posts</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='welcome-styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header style="display: flex; justify-content: space-around;; align-items: baseline;">
+            <h2 style="color: white;">Top Posts Spotted For You</h2>
+            <img src="/static/assets/logo.png" alt="logo" class="logo-login" width="200px">
+        </header>
+
+        {% for post in summaries %}
+            <div class="summary-card">
+                <h4>{{ post.title }}</h4>
+                <p>{{ post.reading_time_minutes }} min</p>
+                <p>{{ post.summary }}</p>
+                <button class="go-to-post-btn">Go To Post</button>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
