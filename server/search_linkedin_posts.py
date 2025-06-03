@@ -9,14 +9,14 @@ from generate_query_ant import generate_semantic_query
 from dotenv import load_dotenv
 load_dotenv()
 
-# Отключаем предупреждения
+# Disable warnings
 os.environ['HF_HUB_DISABLE_SYMLINKS_WARNING'] = '1'
 warnings.filterwarnings('ignore')
 
-# API ключ Gemini
+# Gemini API key
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# Глобальные настройки
+# Global settings
 BLACKLIST_WEIGHTS = {
     # Hiring keywords
     "we're hiring": 0.20,
@@ -63,16 +63,16 @@ POSITIVE_KEYWORDS = {
 
 
 def calculate_score_adjustment(text: str) -> float:
-    """Рассчитывает корректировку score на основе контента"""
+    """Calculates score adjustment based on content"""
     text_lower = text.lower()
     total_adjustment = 0
 
-    # Применяем штрафы
+    # Apply penalties
     for keyword, penalty in BLACKLIST_WEIGHTS.items():
         if keyword in text_lower:
             total_adjustment += penalty
 
-    # Применяем бонусы
+    # Apply bonuses
     for keyword, bonus in POSITIVE_KEYWORDS.items():
         if keyword in text_lower:
             total_adjustment += bonus
@@ -81,15 +81,15 @@ def calculate_score_adjustment(text: str) -> float:
 
 
 def adjust_score(hit: Any) -> Any:
-    """Корректирует score с учетом контента"""
+    """Adjusts score based on content"""
     adjusted_hit = copy.deepcopy(hit)
 
     adjustment = calculate_score_adjustment(hit.payload['text'])
 
-    # Применяем корректировку
+    # Apply adjustment
     adjusted_hit.score = max(0, hit.score - adjustment)
 
-    # Сохраняем информацию для отладки
+    # Save information for debugging
     adjusted_hit.payload['score_adjustment'] = adjustment
     adjusted_hit.payload['original_score'] = hit.score
 
@@ -98,16 +98,16 @@ def adjust_score(hit: Any) -> Any:
 
 def search_posts(degree: str, courses: List[str], limit: int = 3) -> Tuple[List[Dict[str, Any]], str]:
     """
-    Основная функция поиска постов.
+    Main function for searching posts.
 
     Args:
-        degree: Степень студента
-        courses: Список курсов
-        limit: Количество результатов для возврата (по умолчанию 3)
+        degree: Student degree
+        courses: List of courses
+        limit: Number of results to return (default 3)
 
     Returns:
-        Tuple[List[Dict], str]: Кортеж из списка постов и использованного query
-                                Каждый пост содержит: text, score, link, date
+        Tuple[List[Dict], str]: Tuple of list of posts and used query
+                                 Each post contains: text, score, link, date
     """
     # Load model
     model = SentenceTransformer("all-MiniLM-L6-v2")
@@ -115,7 +115,7 @@ def search_posts(degree: str, courses: List[str], limit: int = 3) -> Tuple[List[
     # Connect to Qdrant
     client = QdrantClient(host="localhost", port=6333)
 
-    # Генерируем query с помощью Gemini
+    # Generate query using Gemini
     query_text = generate_semantic_query(degree, courses, GEMINI_API_KEY)
 
     # Encode query
@@ -128,19 +128,19 @@ def search_posts(degree: str, courses: List[str], limit: int = 3) -> Tuple[List[
         limit=50  # Берем больше для лучшей фильтрации
     )
 
-    # Применяем корректировки
+    # Apply adjustments
     adjusted_results = [adjust_score(hit) for hit in results]
 
-    # Сортируем по новому score
+    # Sort by new score
     adjusted_results.sort(key=lambda x: x.score, reverse=True)
 
-    # Фильтруем короткие посты
+    # Filter short posts
     filtered_results = [
         hit for hit in adjusted_results
         if len(hit.payload['text']) > 200
     ]
 
-    # Берем топ результаты
+    # Take top results
     top_results = filtered_results[:limit]
 
 

@@ -10,7 +10,7 @@ def generate_semantic_query(degree: str, courses: List[str], api_key: str) -> st
     genai.configure(api_key=api_key)
     model = genai.GenerativeModel("gemini-2.0-flash")
 
-    # Примеры желаемого формата
+    # Examples of desired format
     example_queries = [
         "how does quicksort work algorithm explained",
         "understanding database indexing B-tree performance",
@@ -39,9 +39,9 @@ def generate_semantic_query(degree: str, courses: List[str], api_key: str) -> st
     response = model.generate_content(contents=prompt)
     query = response.text.strip().lower()
 
-    # Очистка от лишних символов
-    query = ' '.join(query.split())  # Убираем лишние пробелы
-    query = ''.join(c for c in query if c.isalnum() or c.isspace())  # Только буквы и пробелы
+    # Cleaning from unnecessary characters
+    query = ' '.join(query.split())  # Remove extra spaces
+    query = ''.join(c for c in query if c.isalnum() or c.isspace())  # Only letters and spaces
 
     return query
 

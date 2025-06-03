@@ -5,55 +5,54 @@ from qdrant_client.models import PointStruct, Distance, VectorParams
 import numpy as np
 from tqdm import tqdm
 
-# Загрузка всего датасета
+# Loading the entire dataset
 df = pd.read_csv("source/LinkedIn_posts.csv")
-print(f"Загружено {len(df)} записей")
+print(f"Loaded {len(df)} records")
 
-# Загрузка модели BERT
+# Loading BERT model
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
-# Подключение к Qdrant
+# Connecting to Qdrant
 client = QdrantClient(host="localhost", port=6333)
 
-# Создание коллекции (требуется знать размерность векторов)
-# Создадим пример эмбеддинга чтобы узнать размерность
+# Creating a collection (need to know the dimension of vectors)
+# Create an example embedding to find out the dimension
 sample_embedding = model.encode(["Sample text"])
 vector_size = sample_embedding.shape[1]
 
-# Создание коллекции
+# Creating collection
 client.recreate_collection(
     collection_name="linkedin-posts",
     vectors_config=VectorParams(size=vector_size, distance=Distance.COSINE),
 )
 
-# Определение размера батча
 BATCH_SIZE = 100
 
-# Обработка данных по батчам
+# Processing data in batches
 for batch_start in tqdm(range(0, len(df), BATCH_SIZE)):
-    # Определение конца текущего батча
+    # Determining the end of the current batch
     batch_end = min(batch_start + BATCH_SIZE, len(df))
 
-    # Выделение части датафрейма
+    # выделение chasti dataframe
     batch_df = df.iloc[batch_start:batch_end]
 
-    # Создание эмбеддингов для текущего батча
+    # Creating embeddings for the current batch
     batch_texts = batch_df["post_text"].tolist()
     batch_embeddings = model.encode(batch_texts, show_progress_bar=False)
 
-    # Подготовка точек для загрузки
+    # Preparing points for loading
     points = [
         PointStruct(
-            id=batch_start + i,  # Глобальный ID для всего датасета
+            id=batch_start + i,  # Global ID for the entire dataset
             vector=batch_embeddings[i],
             payload={"text": batch_texts[i], "date": batch_df["date_posted"].iloc[i]}
         )
         for i in range(len(batch_texts))
     ]
 
-    # Загрузка батча в коллекцию
+    # Loading batch into collection
     client.upsert(collection_name="linkedin-posts", points=points)
 
-    print(f"Загружен батч {batch_start // BATCH_SIZE + 1}: записи {batch_start}-{batch_end - 1}")
+    print(f"Loaded batch {batch_start // BATCH_SIZE + 1}: records {batch_start}-{batch_end - 1}")
 
-print("Загрузка завершена!")
+print("Loading completed!")
