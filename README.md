@@ -52,8 +52,7 @@ The project is structured as follows:
 ## Dependencies
 
 - Flask
-- Other dependencies (check `requirements.txt` if available)
 
 ## Additional Information
 
-Add any other relevant information here, such as API keys, configuration details, or deployment instructions.
+Add GEMINI_API_KEY.
